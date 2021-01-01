@@ -1,0 +1,23 @@
+echo '#########################################'  scriptstatus.txt
+echo “Load started @`date '+%d-%m-%Y %H%MS'`  scriptstatus.txt
+dt=`date '+Y%m%d%H%M%S'`
+file=customer_info_input file.txt
+file2=customer_info_output_$dt.txt
+
+for i in  `cat  $file`
+do
+####### posting xml for generating ssh key for secure connection
+curl -k -s -user usrpswd -header Content-Type textxml;charset=UTF-8--header SOAPActionPOST--data @sshkey.xml -X POST https127.0.0.1port  sshkey.output
+sshkey=`less sshkey.output  awk -F '' '{print $1}'
+#######placing sshkey in main xml while calling api
+echo xml version envelope$sshkeysoapenvEnvelope  mainapi.xml
+###### Putting load in main API
+curl -k -s -user usrpswd -header Content-Type textxml;charset=UTF-8--header SOAPActionPOST--data @ mainapi.xml -X POST https127.0.0.1port  mainapi.output
+##### Grep status of each api response
+sts='less mainapi.output  awk -F ' ' '{print $1}'
+########putting status in txt file
+echo $i,$sts  $file2
+
+Done
+echo “Load Ended @`date '+%d-%m-%Y %H%MS'`  scriptstatus.txt
+echo '#########################################' . scriptstatus.txt
